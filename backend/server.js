@@ -51,9 +51,10 @@ initTables().then(() => {
     });
   });
 
-  const PORT = 5000;
+  // CORRECTION ICI : Utilisation de process.env.PORT pour Render
+  const PORT = process.env.PORT || 5000;
   server.listen(PORT, () => {
-    console.log(`Serveur actif sur http://localhost:${PORT}`);
+    console.log(`Serveur actif sur le port ${PORT}`);
   });
 }).catch(err => {
   console.error("Erreur lors de l'initialisation de la base de données :", err);

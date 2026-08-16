@@ -1,10 +1,15 @@
 import cassandra from 'cassandra-driver';
 
 const client = new cassandra.Client({
-  contactPoints: ['34.218.4.113', '35.92.27.50', '54.71.44.170'],
-  localDataCenter: 'AWS_VPC_US_WEST_2',
-  keyspace: 'chat_app_v2',
-  credentials: { username: 'iccassandra', password: 'cae7eaa897c28535c925f667693769ed' } 
+  contactPoints: process.env.CASSANDRA_CONTACT_POINTS 
+    ? process.env.CASSANDRA_CONTACT_POINTS.split(',') 
+    : ['34.218.4.113', '35.92.27.50', '54.71.44.170'],
+  localDataCenter: process.env.CASSANDRA_DATACENTER || 'AWS_VPC_US_WEST_2',
+  keyspace: process.env.CASSANDRA_KEYSPACE || 'chat_app_v2',
+  credentials: { 
+    username: process.env.CASSANDRA_USER || 'iccassandra', 
+    password: process.env.CASSANDRA_PASSWORD || 'cae7eaa897c28535c925f667693769ed' 
+  } 
 });
 
 export async function initTables() {

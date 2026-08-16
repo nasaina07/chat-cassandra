@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import axios from 'axios';
 
+// URL de l'API (Render en prod, localhost en dev)
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export default function Auth({ onLogin }) {
   const [isRegister, setIsRegister] = useState(false);
   const [form, setForm] = useState({ username: '', email: '', password: '' });
@@ -9,7 +12,7 @@ export default function Auth({ onLogin }) {
     e.preventDefault();
     const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
     try {
-      const { data } = await axios.post(`http://localhost:5000${endpoint}`, form);
+      const { data } = await axios.post(`${API_URL}${endpoint}`, form);
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('token', data.token);
       onLogin(data.user);

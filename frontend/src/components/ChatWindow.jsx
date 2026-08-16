@@ -3,6 +3,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import { Search, ArrowLeft, Send } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 let socket;
 
 export default function ChatWindow({ currentUser, activeChat, onBack }) {
@@ -16,19 +17,19 @@ export default function ChatWindow({ currentUser, activeChat, onBack }) {
   };
 
   useEffect(() => {
-    socket = io('http://localhost:5000');
+    socket = io(API_URL);
 
     if (activeChat?.id) {
       socket.emit('joinRoom', activeChat.id);
 
       // 1. Charger les messages
-      axios.get(`http://localhost:5000/api/messages/${activeChat.id}`)
+      axios.get(`${API_URL}/api/messages/${activeChat.id}`)
         .then(res => {
           setMessages(res.data || []);
           scrollToBottom();
           
           // 2. Marquer automatiquement les messages comme lus à l'ouverture
-          axios.put(`http://localhost:5000/api/messages/read/${activeChat.id}`, {
+          axios.put(`${API_URL}/api/messages/read/${activeChat.id}`, {
             userId: currentUser.id
           }).catch(err => console.error('Erreur marquage lu:', err));
         })
@@ -68,7 +69,7 @@ export default function ChatWindow({ currentUser, activeChat, onBack }) {
     };
 
     try {
-      await axios.post('http://localhost:5000/api/messages', messageData);
+      await axios.post(`${API_URL}/api/messages`, messageData);
       socket.emit('sendMessage', messageData);
       setNewMessage('');
     } catch (err) {

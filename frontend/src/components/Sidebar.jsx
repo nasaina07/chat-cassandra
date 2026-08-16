@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, LogOut, MessageSquare, Search, User } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export default function Sidebar({ currentUser, activeChat, setActiveChat, onLogout }) {
   const [conversations, setConversations] = useState([]);
   const [users, setUsers] = useState([]);
@@ -16,7 +18,7 @@ export default function Sidebar({ currentUser, activeChat, setActiveChat, onLogo
   const fetchConversations = async () => {
     if (!currentUserId) return;
     try {
-      const response = await axios.get(`http://localhost:5000/api/conversations/user/${currentUserId}`);
+      const response = await axios.get(`${API_URL}/api/conversations/user/${currentUserId}`);
       setConversations(response.data || []);
     } catch (err) {
       console.error('Erreur chargement conversations:', err);
@@ -26,7 +28,7 @@ export default function Sidebar({ currentUser, activeChat, setActiveChat, onLogo
   // Rechercher la liste de tous les utilisateurs
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users');
+      const response = await axios.get(`${API_URL}/api/users`);
       setUsers(response.data || []);
     } catch (err) {
       console.error('Erreur chargement utilisateurs:', err);
@@ -58,7 +60,7 @@ export default function Sidebar({ currentUser, activeChat, setActiveChat, onLogo
         participantId: targetUserId
       };
 
-      const res = await axios.post('http://localhost:5000/api/conversations', payload);
+      const res = await axios.post(`${API_URL}/api/conversations`, payload);
       
       // Recharger la liste des conversations
       await fetchConversations();
@@ -81,7 +83,7 @@ export default function Sidebar({ currentUser, activeChat, setActiveChat, onLogo
 
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:5000/api/conversations', {
+      const res = await axios.post(`${API_URL}/api/conversations`, {
         title: newChatTitle,
         userId: currentUserId
       });

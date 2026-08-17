@@ -10,9 +10,7 @@ const client = new cassandra.Client({
     username: process.env.CASSANDRA_USER || 'iccassandra', 
     password: process.env.CASSANDRA_PASSWORD || 'cae7eaa897c28535c925f667693769ed' 
   },
-  sslOptions: {
-    rejectUnauthorized: false
-  }
+  sslOptions: {}
 });
 
 export async function initTables() {
